@@ -26,7 +26,7 @@ REFLEXION BACKEND
             Création d'un graphe, avec l'évolution de la température et le seuil identiés de 
             Création d'un document "seuils.csv" a chaque changement de valeur d'un seuil
             --> selon données identifiés + seuil - Alarme est crée, avec niveau de criticité. Update d'un document .csv 
-            --> selon "éevolution de la pente - déterminer dans "x" seconde elle va atteindre un seuil très bas/trs haut (si entre seuil bas et trs bas/haut et très haut)
+            --> selon "évolution de la pente - déterminer dans "x" seconde elle va atteindre un seuil très bas/trs haut (si entre seuil bas et trs bas/haut et très haut)
 
         PowerBI Desktop (bocquetbontempsbourre.pbix)
             Réalisation du tableau de bord lisant
@@ -37,32 +37,35 @@ REFLEXION BACKEND
             ID
             lecture du mot de température - (tempVar)
             lecture de si la zone est en auto ou non - (autoVar)
-            Temps de collecte de l'information - (dateAutomVar)
+            Temps de collecte de l'information - (dateAutom)
 
          - tableur modification des nouveaux seuils, (seuil) avec:
             ID
-            valeur associé au seuil très bas - (seuilTBVar)
-            valeur associé au seuil bas - (seuilBVar)
-            valeur associé au seuil haut - (seuilHVar)
-            valeur associé au seuil très haut - (seuilTHVar)
-            date de modification des valeurs (dateSeuilVar)
+            valeur associé au seuil très bas - (seuilTB)
+            valeur associé au seuil bas - (seuilB)
+            valeur associé au seuil haut - (seuilH)
+            valeur associé au seuil très haut - (seuilTH)
+            date de modification des valeurs (dateSeuil)
 
-         - tableur alarme du site HTML, (alarm) avec:
+         - tableur alarme du site HTML, (alarme) avec:
             ID
-            
-
-
-
-
-
+            type d'alarme qui a été déclenché (très haut vs haut vs bas vs tres bas) - (typeAlarme)
+            date d'activation de l'alarme (dateAlarme)
+            valeure planifié, basé en calculant la pente basée sur X valeurs précédentes (penteAlarme)
 
 Usage:
 ======
     Javascript index.js
 
     (inserer ici chaque fonction de push/pull)
-    
-    
+    app.post:
+        autom/read - permet de lire la valeur actuelle de l'automate
+
+        seuil/input - créer/modifier les seuils associés au code ; modifier le classeur "seuil.csv" avec la valeur
+        seuil/read - retirer les valeurs nécessaire pour faire fonctionner le graphe
+            
+
+        alarme/input - inserer une valeur dans le classeur "alarme.csv"
 **/
 
 __authors__ = ("Nicolas Bontemps, Eloise Bourre, Maxime Bocquet")
@@ -70,3 +73,4 @@ __contact__ = ("nicolas.bontemps@etu.unilasalle.fr, eloise.bourre@etu.unilasalle
 __copyright__ = "Unilasalle Amiens"
 __date__ = "2025-03-31"
 __version__= "1.0.0"
+
