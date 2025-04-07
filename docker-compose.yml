@@ -1,0 +1,46 @@
+services:
+  frontend:
+    image: nginx:1.27.3
+    ports:
+      - "8080:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+      - ./frontend:/usr/share/nginx/js
+    networks:
+      - tpmc_network
+
+  backend:
+    build: ./backend  # The path to your Dockerfile
+    ports:
+      - "5001:5001"   # Expose port 5001 for the backend API
+    depends_on:
+      - db
+    volumes:
+      - ./backend:/app  # Mount your local backend folder to /app in the 
+    #env_file:
+    #  - .env
+    #depends_on:
+    #  - db
+    networks:
+      - tpmc_network
+
+  db:
+    image: mariadb:11.6.2
+    environment:
+      MYSQL_ROOT_LOGIN: bocquetbontempsbourre
+      MYSQL_ROOT_PASSWORD: olivier
+      MYSQL_DATABASE: tpmc #originalement "hackathon"
+    ports:
+      - "3307:3307"
+    volumes:
+    #- db_data:/var/lib/mysql
+     - ./db/tpmc.sql:/docker-entrypoint-initdb.d/schema.sql
+    networks:
+      - tpmc_network
+
+volumes:
+  db_data:
+
+networks:
+  hackathon_network:
+    driver: bridge

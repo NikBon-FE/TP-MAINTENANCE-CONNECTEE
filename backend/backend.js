@@ -32,26 +32,26 @@ REFLEXION BACKEND
             Réalisation du tableau de bord lisant
             
             
-    DONNEES BACKEND NECESSAIRES:
+    DONNEES BACKEND (tpmc) NECESSAIRES:
          - tableur lecture de donnée automate, (autom) avec:
-            ID
-            lecture du mot de température - (tempVar)
-            lecture de si la zone est en auto ou non - (autoVar)
-            Temps de collecte de l'information - (dateAutom)
+            ID (int)
+            lecture du mot de température (int)- (tempVar)
+            lecture de si la zone est en auto ou non (boolean) - (autoVar)
+            Temps de collecte de l'information (datetime) - (dateAutom)
 
          - tableur modification des nouveaux seuils, (seuil) avec:
-            ID
-            valeur associé au seuil très bas - (seuilTB)
-            valeur associé au seuil bas - (seuilB)
-            valeur associé au seuil haut - (seuilH)
-            valeur associé au seuil très haut - (seuilTH)
-            date de modification des valeurs (dateSeuil)
+            ID (int)
+            valeur associé au seuil très bas (int) - (seuilTB)
+            valeur associé au seuil bas (int) - (seuilB)
+            valeur associé au seuil haut (int)- (seuilH)
+            valeur associé au seuil très haut (int) - (seuilTH)
+            date de modification des valeurs (datetime) - (dateSeuil)
 
          - tableur alarme du site HTML, (alarme) avec:
-            ID
-            type d'alarme qui a été déclenché (très haut vs haut vs bas vs tres bas) - (typeAlarme)
-            date d'activation de l'alarme (dateAlarme)
-            valeure planifié, basé en calculant la pente basée sur X valeurs précédentes (penteAlarme)
+            ID (int)
+            type d'alarme qui a été déclenché (très haut vs haut vs bas vs tres bas) (varchar) - (typeAlarme)
+            date d'activation de l'alarme (datetime) - (dateAlarme)
+            valeure planifié, basé en calculant la pente basée sur X valeurs précédentes (int) (penteAlarme)
 
 Usage:
 ======
@@ -74,3 +74,42 @@ __copyright__ = "Unilasalle Amiens"
 __date__ = "2025-03-31"
 __version__= "1.0.0"
 
+const express = require('express');
+const app = express();
+
+const mariadb = require('mariadb');
+const cors = require('cors');
+
+const port = 5001;
+
+// Utiliser le middleware CORS
+app.use(cors());
+
+// Utiliser le middleware pour traiter les requêtes JSON
+app.use(express.json());
+
+// Configuration de la connexion à MariaDB
+const pool = mariadb.createPool({
+    host: 'db',
+    user: 'root',
+    password: 'root',
+    database: 'tpmc',   // <-- INSERER LE NOM DE LA DATABASE ICI
+    connectionLimit: 5
+});
+
+// DONNEES MODBUS
+// create an empty modbus client
+const ModbusRTU = require("modbus-serial");
+const client = new ModbusRTU();
+
+// open connection to a tcp line
+client.connectTCP("127.0.0.1", { port: 5001 });
+client.setID(1);
+
+// read the values of 10 registers starting at address 0
+// on device number 1. and log the values to the console.
+setInterval(function() {
+    client.readHoldingRegisters(0, 10, function(err, data) {
+        console.log(data.data);
+    });
+}, 1000);
