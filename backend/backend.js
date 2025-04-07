@@ -103,7 +103,7 @@ const ModbusRTU = require("modbus-serial");
 const client = new ModbusRTU();
 
 // open connection to a tcp line
-client.connectTCP("127.0.0.1", { port: 5001 });
+client.connectTCP("172.16.1.23", { port: 5001 });
 client.setID(1);
 
 // read the values of 10 registers starting at address 0
